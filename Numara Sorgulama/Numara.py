@@ -3,11 +3,18 @@ import urllib
 import os
 from bs4 import BeautifulSoup
 
-os.system('clear')
+if os.name == 'nt':
+	def clear():
+		os.system('cls')
+else:
+	def clear():
+		os.system('clear')
+
+clear()
 while True:
 	try:
 		numara = input('Numara (05XX...): ')
-		url = 'http://www.kimbunumara.com/searchz.php'
+		url = 'https://www.kimbunumara.com/searchz.php'
 		values = {"token_1" : "1tDe0f7XLWhZHyaqGK104Cgn2296Aj8Ziay0OtY5",
 				  "token_2" : "2tSe0f7XLWhZGyaqGK104Cen3696Aj8Ziay0OtY5",
 				  "mainpage" : "false",
@@ -32,10 +39,10 @@ while True:
 			isimHam = parsed_html.find("td")
 			isim = str(isimHam).replace("<td>", "")
 			isim = str(isim).replace("</td>", "")
-			os.system('clear')
+			clear()
 			print(isim + '\n')
 		else:
-			os.system('clear')
+			clear()
 			print('Not found.\n')
 	except:
 		print('Error, try again.\n')

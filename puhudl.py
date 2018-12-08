@@ -25,7 +25,20 @@ content = crawler.read()
 parsed_html = BeautifulSoup(content, "html.parser")
 bolumList = parsed_html.findAll("a", {"class": "episode-item seasons__episode-item"})
 for index, bolum in enumerate(bolumList):
-	print(index + 1, ' - ', bolum.find("div", {"class": "episode-item__title"}).string)
+	finalUrl = 'https://puhutv.com/api/slug' + bolumList[int(index)].get('href')
+	req = urllib.request.Request(
+	finalUrl,
+	data=None,
+	headers={
+		'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+	}
+	)
+	crawler = urllib.request.urlopen(req)
+	content = crawler.read()
+	jsonData = json.loads(content)
+	bolumId = jsonData['data']['id']
+	bolumTarih = jsonData['data']['created_at']
+	print(index + 1, ' - ', bolum.find("div", {"class": "episode-item__title"}).string, ' - ', bolumTarih[:10], ' - ', bolumId)
 bolumSecim = int(input('\nSeçiminiz: ')) - 1
 os.system("clear")
 finalUrl = 'https://puhutv.com/api/slug' + bolumList[int(bolumSecim)].get('href')
@@ -64,4 +77,4 @@ while test.find('hmac=') is not -1:
 	content = crawler.read()
 	jsonData = json.loads(content)
 	test = jsonData['data']['videos'][4]['url']
-os.system('wget \"' + test + '\" -O \"/home/w3rtig0/Desktop/' + str(bolumId) + '.mp4\"')
+os.system('wget \"' + test + '\" -O \"/home/w3rtig0/Downloads/' + str(bolumId) + '.mp4\"')
